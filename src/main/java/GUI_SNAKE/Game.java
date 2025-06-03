@@ -4,13 +4,12 @@
  */
 package GUI_SNAKE;
 
+import Logic_SNAKE.*;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import Snake_Cliente_Servidor.*;
-import Chat.*;
 /**
  *
  * @author william
@@ -18,6 +17,7 @@ import Chat.*;
 public class Game extends javax.swing.JFrame {
     FondoPanel fondo = new FondoPanel();
     SNAKE_PLAYERS jugadores;
+    LogicSnakeCliente logicSnakeCliente;
 
     /**
      * Creates new form Game
@@ -114,20 +114,22 @@ public class Game extends javax.swing.JFrame {
 
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
         // TODO add your handling code here:
-        new SnakeCliente();
+        logicSnakeCliente = new LogicSnakeCliente();
     }//GEN-LAST:event_btnJugarActionPerformed
 
     private void btnTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTablaActionPerformed
         // TODO add your handling code here:
         jugadores = new SNAKE_PLAYERS();
+        jugadores.rank();
         jugadores.setVisible(true);
 
     }//GEN-LAST:event_btnTablaActionPerformed
 
     private void btnChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChatActionPerformed
         // TODO add your handling code here:
-        new Cliente();
+        new ChatCliente();
     }//GEN-LAST:event_btnChatActionPerformed
+
 
     /**
      * @param args the command line arguments

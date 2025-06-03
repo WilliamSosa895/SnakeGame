@@ -53,5 +53,10 @@
       <!-- Si no tienes dependencias externas, deja este bloque vacío -->
       <!-- Por ejemplo, si en el futuro quisieras Swing, no necesitas añadir nada extra: 
            Swing viene con JDK. -->
+        <dependency>
+            <groupId>org.netbeans.external</groupId>
+            <artifactId>AbsoluteLayout</artifactId>
+            <version>RELEASE250</version>
+        </dependency>
     </dependencies>
 </project>

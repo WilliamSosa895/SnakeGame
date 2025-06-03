@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Snake_Cliente_Servidor;
+package GUIWithCode;
 
+import GUIWithCode.PanelSnakeMulti;
+import Snake_Cliente_Servidor.SnakeMessage;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.ObjectInputStream;
@@ -17,21 +19,24 @@ import javax.swing.SwingUtilities;
  */
 public class SnakePanelVista extends JFrame {
 
-    private PanelSnakeMulti panel;         
-    private ObjectOutputStream out;        
-    private ObjectInputStream in;           
+    private PanelSnakeMulti panel;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
     private String playerName;
 
     public SnakePanelVista(String playerName, ObjectOutputStream out, ObjectInputStream in) {
         this.playerName = playerName;
         this.out = out;
-        this.in  = in;
+        this.in = in;
 
         initComponents();
         setTitle("Snake - Jugador: " + playerName);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
         panel = new PanelSnakeMulti(800, 30);
         add(panel);
-        panel.setBounds(10,10,800,800);
+        panel.setBounds(10, 10, 800, 800);
         panel.setOpaque(false);
 
         requestFocus(true);
@@ -49,22 +54,43 @@ public class SnakePanelVista extends JFrame {
 
                 } else if (msg.getType() == SnakeMessage.Type.GAME_OVER) {
                     String winner = msg.getPlayerName();
-
                     if (winner == null || winner.isBlank()) {
-                        JOptionPane.showMessageDialog(this, "Game Over. ¡Empate!");
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Game Over. ¡Empate!",
+                            "Fin de la Partida",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
                     } else if (winner.equals(playerName)) {
-                        JOptionPane.showMessageDialog(this, "Game Over. ¡Ganaste! (" + winner + ")");
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Game Over. ¡Ganaste! (" + winner + ")",
+                            "Fin de la Partida",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
                     } else {
-                        JOptionPane.showMessageDialog(this, "Game Over. Ganador: " + winner);
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "Game Over. Ganador: " + winner,
+                            "Fin de la Partida",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
                     }
-                    System.exit(0);
+                    dispose();
+                    return;
                 }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Desconectado del servidor");
-            System.exit(0);
+            JOptionPane.showMessageDialog(
+                this,
+                "Desconectado del servidor",
+                "Conexión perdida",
+                JOptionPane.ERROR_MESSAGE
+            );
+            dispose();
         }
     }
+
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {
         try {
@@ -85,13 +111,12 @@ public class SnakePanelVista extends JFrame {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setSize(820, 840);
+        setLocationRelativeTo(null);
         addKeyListener(new KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
             }
         });
-        setSize(820, 840);
-        setLocationRelativeTo(null);
     }
 }

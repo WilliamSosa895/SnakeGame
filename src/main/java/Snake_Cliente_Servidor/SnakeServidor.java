@@ -1,9 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package Snake_Cliente_Servidor;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,14 +20,14 @@ import javax.swing.JOptionPane;
  */
 public class SnakeServidor {
 
-    private int puerto = 6000; 
+    private int puerto = 6000;
     private ServerSocket serverSocket;
 
     private Map<String, SnakeData> players = new ConcurrentHashMap<>();
 
     private int foodX, foodY;
-    private int gridSize = 30;      
-    private int panelSize = 800;    
+    private int gridSize = 30;
+    private int panelSize = 800;
 
     private final int TICK = 200;
 
@@ -65,13 +65,11 @@ public class SnakeServidor {
                         break;
                     }
                 }
-
                 String collisionWinner = checkCollisions();
                 if (collisionWinner != null) {
                     handleGameOver(collisionWinner);
-                    return; 
+                    return;
                 }
-
                 List<SnakeDTO> dtos = new ArrayList<>();
                 for (SnakeData sd : players.values()) {
                     dtos.add(new SnakeDTO(sd.getSegments(), sd.r, sd.g, sd.b));
@@ -95,7 +93,6 @@ public class SnakeServidor {
             int[] head = sd.getHead();
             headPositions.put(name, head);
         }
-
         boolean anyCollision = false;
         for (String p1 : headPositions.keySet()) {
             int[] h1 = headPositions.get(p1);
@@ -127,7 +124,6 @@ public class SnakeServidor {
                 if (anyCollision) break;
             }
         }
-
         if (!anyCollision) return null;
 
         int maxLength = -1;
@@ -165,18 +161,66 @@ public class SnakeServidor {
             e.printStackTrace();
         }
     }
-
+    
     private void saveScoresToFile() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("scores.txt", true))) {
-            pw.println("=== Game terminado: Puntajes finales ===");
-            for (Map.Entry<String, SnakeData> entry : players.entrySet()) {
-                String name = entry.getKey();
-                int score = entry.getValue().getSegments().size();
-                pw.println(name + " : " + score);
+        File file = new File("scores.dat");
+        List<Player> listaFicheroAntiguo = new ArrayList<>();
+
+        if (file.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+                @SuppressWarnings("unchecked")
+                List<Player> temp = (List<Player>) ois.readObject();
+                listaFicheroAntiguo.addAll(temp);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            pw.println("----------------------------------------");
+        }
+
+        Map<String, Player> mapaAntiguo = new HashMap<>();
+        for (Player p : listaFicheroAntiguo) {
+            mapaAntiguo.put(p.getName(), p);
+        }
+
+        for (Map.Entry<String, SnakeData> entry : players.entrySet()) {
+            String nombre = entry.getKey();
+            int scoreActual = entry.getValue().getSegments().size();
+
+            if (mapaAntiguo.containsKey(nombre)) {
+                Player viejo = mapaAntiguo.get(nombre);
+                if (scoreActual > viejo.getScore()) {
+                    viejo.setScore(scoreActual);
+                }
+            } else {
+                mapaAntiguo.put(nombre, new Player(nombre, scoreActual));
+            }
+        }
+
+        List<Player> listaFusionada = new ArrayList<>(mapaAntiguo.values());
+
+        Collections.sort(listaFusionada, (a, b) -> Integer.compare(b.getScore(), a.getScore()));
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            oos.writeObject(listaFusionada);
+            oos.flush();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public Player[] loadScoresFromFile() {
+        File file = new File("scores.dat");
+        if (!file.exists()) {
+            return new Player[0];
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            List<Player> lista = (List<Player>) ois.readObject();
+            Collections.sort(lista, (a, b) -> Integer.compare(b.getScore(), a.getScore()));
+            return lista.toArray(new Player[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Player[0];
         }
     }
 
@@ -195,9 +239,7 @@ public class SnakeServidor {
             System.out.println("Conectado: " + playerName + " desde " + s.getInetAddress());
 
             SnakeData sd = new SnakeData(gridSize, panelSize, playerName);
-
             sd.setOutput(out);
-
             players.put(playerName, sd);
 
             List<SnakeDTO> initialDtos = new ArrayList<>();
@@ -261,8 +303,4 @@ public class SnakeServidor {
         }
     }
 
-    public static void main(String[] args) {
-        SnakeServidor servidor = new SnakeServidor(6000);
-        servidor.start();
-    }
 }

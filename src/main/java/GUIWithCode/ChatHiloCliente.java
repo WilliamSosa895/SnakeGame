@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Chat;
+package GUIWithCode;
 
+import GUI_SNAKE.ChatCliente;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -19,13 +20,13 @@ import javax.swing.DefaultListModel;
  *
  * @author william
  */
-public class HiloCliente extends Thread {
+public class ChatHiloCliente extends Thread {
     private Socket socketCliente;
     private DataInputStream entrada;
     private ObjectInputStream entradaObjeto;
-    private Cliente clienteGUI;
+    private ChatCliente clienteGUI;
 
-    public HiloCliente(Socket socketCliente, Cliente clienteGUI) throws Exception {
+    public ChatHiloCliente(Socket socketCliente, ChatCliente clienteGUI) throws Exception {
         this.socketCliente = socketCliente;
         this.clienteGUI = clienteGUI;
         this.entrada = new DataInputStream(socketCliente.getInputStream());

@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package Snake_Cliente_Servidor;
+import GUIWithCode.SnakePanelVista;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -14,7 +12,7 @@ import javax.swing.JOptionPane;
  */
 public class SnakeCliente {
 
-    private String host = "localhost"; // ip de willyserver
+    private String host = "172.20.10.12"; // ip de willyserver
     private int puerto = 6000;
 
     private String nombre;
@@ -22,6 +20,7 @@ public class SnakeCliente {
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private SnakePanelVista vista; 
+    
     public SnakeCliente() {
         try {
             nombre = JOptionPane.showInputDialog("Ingresa tu nombre");
