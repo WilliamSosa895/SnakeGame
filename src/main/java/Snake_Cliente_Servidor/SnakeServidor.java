@@ -4,15 +4,12 @@ package Snake_Cliente_Servidor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -56,6 +53,11 @@ public class SnakeServidor {
     private void gameLoop() {
         try {
             while (true) {
+                if (players.isEmpty()) {
+                    Thread.sleep(TICK);
+                    continue;
+                }
+
                 for (SnakeData sd : players.values()) {
                     sd.advance(gridSize);
                 }
@@ -68,8 +70,11 @@ public class SnakeServidor {
                 String collisionWinner = checkCollisions();
                 if (collisionWinner != null) {
                     handleGameOver(collisionWinner);
-                    return;
+
+                    Thread.sleep(TICK);
+                    continue;
                 }
+
                 List<SnakeDTO> dtos = new ArrayList<>();
                 for (SnakeData sd : players.values()) {
                     dtos.add(new SnakeDTO(sd.getSegments(), sd.r, sd.g, sd.b));
@@ -84,6 +89,7 @@ public class SnakeServidor {
             e.printStackTrace();
         }
     }
+
 
     private String checkCollisions() {
         Map<String,int[]> headPositions = new ConcurrentHashMap<>();
@@ -152,14 +158,16 @@ public class SnakeServidor {
         SnakeMessage overMsg = new SnakeMessage(SnakeMessage.Type.GAME_OVER, winnerName, true);
         broadcast(overMsg);
 
-        try {
-            for (SnakeData sd : players.values()) {
-                try { sd.out.close(); } catch (Exception ignore) {}
+        for (SnakeData sd : players.values()) {
+            try {
+                sd.out.close();
+            } catch (Exception ignore) {
             }
-            serverSocket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        players.clear();
+        spawnFood();
+
     }
     
     private void saveScoresToFile() {

@@ -5,6 +5,7 @@
 package GUI_SNAKE;
 
 import GUIWithCode.ChatHiloCliente;
+import java.awt.event.KeyEvent;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import javax.swing.DefaultListModel;
@@ -20,7 +21,7 @@ public class ChatCliente extends javax.swing.JFrame {
     
     private Socket cliente;
     private final int PUERTO = 5000;
-    private String host = "172.20.10.12";
+    private String host = "localhost";
     private DataOutputStream salida;
     private String nombre;
 
@@ -92,6 +93,11 @@ public class ChatCliente extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButton1KeyPressed(evt);
+            }
+        });
 
         jList1.setBackground(new java.awt.Color(255, 255, 255));
         jList1.setForeground(new java.awt.Color(0, 0, 0));
@@ -145,6 +151,10 @@ public class ChatCliente extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al enviar: " + e.getMessage());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
+
+    }//GEN-LAST:event_jButton1KeyPressed
 
     /**
      * @param args the command line arguments

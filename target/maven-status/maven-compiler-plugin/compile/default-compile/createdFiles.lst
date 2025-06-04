@@ -30,6 +30,7 @@ GUI_SNAKE/RunServers.class
 GUI_SNAKE/SNAKE_PLAYERS$1.class
 Snake_Cliente_Servidor/SnakeCliente.class
 Snake/PanelSnake.class
+GUI_SNAKE/ChatCliente$3.class
 GUI_SNAKE/Game$2.class
 Logic_SNAKE/LogicPlayer.class
 Snake/Vista$2.class

@@ -33,7 +33,7 @@ public class SnakePanelVista extends JFrame {
         setTitle("Snake - Jugador: " + playerName);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
+        
         panel = new PanelSnakeMulti(800, 30);
         add(panel);
         panel.setBounds(10, 10, 800, 800);

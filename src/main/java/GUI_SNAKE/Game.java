@@ -115,6 +115,7 @@ public class Game extends javax.swing.JFrame {
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
         // TODO add your handling code here:
         logicSnakeCliente = new LogicSnakeCliente();
+        LogicSnakeServidor cd = new LogicSnakeServidor(6000);
     }//GEN-LAST:event_btnJugarActionPerformed
 
     private void btnTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTablaActionPerformed

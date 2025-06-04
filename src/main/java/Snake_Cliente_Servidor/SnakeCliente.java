@@ -39,7 +39,7 @@ public class SnakeCliente {
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error de conexión: " + e.getMessage());
-            System.exit(1);
+            System.exit(0);
         }
     }
 
